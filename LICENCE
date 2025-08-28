@@ -1,0 +1,26 @@
+---
+
+No License / Todos los derechos reservados (All rights reserved)
+
+Copyright (c) [2025] Elías Higuera Acosta
+
+Natural de Colombia
+
+Microservicio: billing-engine
+Descripción:
+El microservicio billing-engine es el núcleo del sistema de facturación multitenant.
+Su objetivo es automatizar el ciclo completo de facturación de múltiples tenants, aplicando reglas fiscales, generando facturas, procesando pagos y emitiendo notificaciones, todo con seguridad, auditabilidad y escalabilidad.
+
+Aviso legal:
+Todos los derechos están reservados. Ninguna parte de este software
+puede ser reproducida, distribuida, modificada, publicada, transmitida,
+o utilizada de cualquier forma sin el permiso previo y por escrito
+del titular de los derechos, Elías Higuera Acosta.
+
+Queda estrictamente prohibido el uso, copia, modificación o distribución
+sin autorización explícita del propietario.
+
+Este archivo de licencia no concede ningún derecho de uso, reproducción,
+modificación, distribución o explotación del software.
+
+---

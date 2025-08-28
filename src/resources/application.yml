@@ -1,0 +1,129 @@
+# resources/application.yml
+spring:
+  application:
+    name: billing-service
+  profiles:
+    active: dev  # Perfil activo (dev, test, prod)
+  datasource:
+    url: jdbc:postgresql://localhost:5432/billing_db
+    username: ${DB_USERNAME:billing_user}
+    password: ${DB_PASSWORD:securePassword123!} # Ideal usar Vault o variable de entorno
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 5
+
+server:
+  port: 8080
+  servlet:
+    context-path: /api
+
+logging:
+  level:
+    root: INFO
+    com.worksphere.billing: DEBUG
+  file:
+    name: logs/billing-service.log
+
+# Configuración de servicios externos
+services:
+  metrics-agent:
+    url: ${METRICS_AGENT_URL:https://metrics-agent.local/api}
+    token: ${METRICS_AGENT_TOKEN:encryptedTokenHere}
+
+  payment-gateway:
+    stripe:
+      api-key: ${STRIPE_API_KEY:encryptedStripeKey}
+      endpoint: https://api.stripe.com
+    paypal:
+      client-id: ${PAYPAL_CLIENT_ID:encryptedClientId}
+      client-secret: ${PAYPAL_CLIENT_SECRET:encryptedSecret}
+      endpoint: https://api.paypal.com
+
+  cicd-deployer:
+    endpoint: ${CICD_DEPLOYER_URL:https://cicd-deployer.local/api}
+    auth-token: ${CICD_DEPLOYER_TOKEN:encryptedToken}
+
+  email-service:
+    smtp:
+      host: smtp.sendgrid.net
+      port: 587
+      username: ${SMTP_USERNAME:sendgrid_user}
+      password: ${SMTP_PASSWORD:encryptedSmtpPassword}
+      protocol: smtp
+      tls: true
+      default-from: "billing@worksphere.com"
+
+  kafka:
+    bootstrap-servers: localhost:9092
+    topic:
+      billing-events: billing-events-topic
+      payment-events: payment-events-topic
+    producer:
+      retries: 3
+      acks: all
+      batch-size: 16384
+      linger-ms: 5
+
+# Configuración de facturación
+billing:
+  default-timezone: "America/Bogota"
+  retry:
+    max-attempts: 5
+    backoff-ms: 2000
+  cycle:
+    default-duration-days: 30
+  tax:
+    config-file: tax-rules.yml
+  invoice:
+    pdf-template: templates/invoice-template.pdf
+    sign: true
+    export-formats:
+      - PDF
+      - XML
+
+# Seguridad y auditoría
+security:
+  jwt:
+    secret-key: ${JWT_SECRET:superSecretKey}
+    expiration-ms: 3600000
+  vault:
+    enabled: true
+    url: https://vault.local
+    token: ${VAULT_TOKEN:encryptedVaultToken}
+
+audit:
+  enabled: true
+  log-level: INFO
+  retention-days: 365
+  db-table: billing_audit_log
+
+# Configuración de perfiles por entorno
+---
+spring:
+  profiles: dev
+  datasource:
+    url: jdbc:postgresql://localhost:5432/billing_db_dev
+  logging:
+    level:
+      com.worksphere.billing: DEBUG
+
+---
+spring:
+  profiles: test
+  datasource:
+    url: jdbc:postgresql://localhost:5432/billing_db_test
+  logging:
+    level:
+      com.worksphere.billing: INFO
+
+---
+spring:
+  profiles: prod
+  datasource:
+    url: jdbc:postgresql://billing-prod-db:5432/billing_db
+    username: ${DB_USERNAME_PROD:billing_prod_user}
+    password: ${DB_PASSWORD_PROD:secureProdPassword!}
+  logging:
+    level:
+      com.worksphere.billing: WARN

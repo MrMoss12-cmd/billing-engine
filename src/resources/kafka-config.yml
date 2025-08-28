@@ -1,0 +1,64 @@
+# resources/kafka-config.yml
+
+kafka:
+  bootstrap-servers: 
+    - kafka1.local:9093
+    - kafka2.local:9093
+    - kafka3.local:9093
+  security:
+    protocol: SASL_SSL
+    sasl:
+      mechanism: PLAIN
+      jaas:
+        user: ${KAFKA_USER:billing_service}
+        password: ${KAFKA_PASSWORD:secureKafkaPass!}
+    ssl:
+      truststore-location: classpath:certs/kafka.truststore.jks
+      truststore-password: ${KAFKA_TRUSTSTORE_PASSWORD:truststorePass}
+      keystore-location: classpath:certs/kafka.keystore.jks
+      keystore-password: ${KAFKA_KEYSTORE_PASSWORD:keystorePass}
+      key-password: ${KAFKA_KEY_PASSWORD:keyPass}
+
+  topics:
+    billing-events:
+      partitions: 6
+      replication-factor: 3
+      cleanup-policy: delete
+      retention-ms: 604800000  # 7 días
+    payment-events:
+      partitions: 4
+      replication-factor: 3
+      cleanup-policy: compact
+      retention-ms: 259200000  # 3 días
+    invoice-events:
+      partitions: 4
+      replication-factor: 3
+      cleanup-policy: delete
+      retention-ms: 604800000
+
+  producer:
+    retries: 5
+    acks: all
+    batch-size: 16384
+    linger-ms: 10
+    max-request-size: 1048576
+    compression-type: snappy
+    enable-idempotence: true
+
+  consumer:
+    group-id: billing-service-group
+    enable-auto-commit: false
+    auto-offset-reset: earliest
+    max-poll-records: 500
+    fetch-max-wait-ms: 500
+    session-timeout-ms: 10000
+    max-partition-fetch-bytes: 1048576
+
+  monitoring:
+    metrics-enabled: true
+    jmx-port: 9999
+
+  audit:
+    config-version: 1.0
+    last-updated: 2025-08-16
+    description: "Configuración de topics y seguridad para Kafka en microservicio billing-service."

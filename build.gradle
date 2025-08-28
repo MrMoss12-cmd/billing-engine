@@ -1,0 +1,67 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.2.0' // Ajusta según tu versión
+    id 'io.spring.dependency-management' version '1.1.0'
+    id 'com.palantir.docker' version '0.32.0' // Para integración con Docker opcional
+}
+
+group = 'com.worksphere.billingengine'
+version = '1.0.0'
+sourceCompatibility = '17'
+targetCompatibility = '17'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // Spring Boot Starter
+    implementation 'org.springframework.boot:spring-boot-starter'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
+    // Kafka
+    implementation 'org.springframework.kafka:spring-kafka'
+
+    // Database (PostgreSQL ejemplo)
+    runtimeOnly 'org.postgresql:postgresql'
+
+    // Logging
+    implementation 'org.springframework.boot:spring-boot-starter-logging'
+
+    // PDF, JSON, Utilities
+    implementation 'com.itextpdf:itext7-core:7.2.5'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.15.2'
+
+    // Testing
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.mockito:mockito-core:5.5.0'
+    testImplementation 'org.testcontainers:junit-jupiter:1.20.3'
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+// Tareas opcionales para Docker
+docker {
+    name "${project.group}/${project.name}:${project.version}"
+    files tasks.bootJar.get().archiveFile
+    buildArgs(['JAR_FILE': tasks.bootJar.get().archiveFileName.get()])
+}
+
+tasks.register('cleanBuild') {
+    dependsOn 'clean', 'build'
+    group = 'build'
+    description = 'Limpia y compila la aplicación'
+}
+
+tasks.register('buildDocker') {
+    dependsOn 'bootJar'
+    group = 'docker'
+    description = 'Construye la imagen Docker del microservicio'
+    doLast {
+        println 'Docker image built successfully.'
+    }
+}

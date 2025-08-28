@@ -1,0 +1,106 @@
+<!-- resources/mail-templates/invoice_email_template.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Factura Electrónica</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 90%;
+            max-width: 700px;
+            margin: 20px auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        .header {
+            border-bottom: 2px solid #4CAF50;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            margin: 0;
+            color: #4CAF50;
+        }
+        .invoice-details {
+            margin-bottom: 20px;
+        }
+        .invoice-details td {
+            padding: 5px 10px;
+        }
+        .total {
+            font-weight: bold;
+            font-size: 1.2em;
+            color: #4CAF50;
+        }
+        .footer {
+            font-size: 0.9em;
+            color: #777;
+            border-top: 1px solid #ddd;
+            padding-top: 10px;
+            margin-top: 20px;
+        }
+        .button {
+            display: inline-block;
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 15px;
+            text-decoration: none;
+            border-radius: 5px;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Factura Electrónica</h1>
+            <p>Estimado/a <strong>{{tenant_name}}</strong>,</p>
+        </div>
+
+        <div class="invoice-details">
+            <table>
+                <tr>
+                    <td>Factura ID:</td>
+                    <td>{{invoice_id}}</td>
+                </tr>
+                <tr>
+                    <td>Fecha de emisión:</td>
+                    <td>{{invoice_date}}</td>
+                </tr>
+                <tr>
+                    <td>Periodo facturado:</td>
+                    <td>{{billing_cycle}}</td>
+                </tr>
+                <tr>
+                    <td>Monto base:</td>
+                    <td>{{base_amount}}</td>
+                </tr>
+                <tr>
+                    <td>Impuestos:</td>
+                    <td>{{tax_amount}}</td>
+                </tr>
+                <tr class="total">
+                    <td>Total a pagar:</td>
+                    <td>{{total_amount}}</td>
+                </tr>
+            </table>
+
+            <a href="{{invoice_download_link}}" class="button">Descargar Factura</a>
+        </div>
+
+        <div class="footer">
+            <p>Gracias por su preferencia.</p>
+            <p>Este correo es confidencial y solo para uso del destinatario.</p>
+        </div>
+    </div>
+</body>
+</html>

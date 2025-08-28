@@ -1,0 +1,14 @@
+rootProject.name = 'billing-engine'
+
+// Módulos principales del microservicio
+include 'service'
+include 'usecase'
+include 'transport'
+include 'config'
+include 'events'
+include 'utils'
+include 'scripts'
+include 'test'
+
+// Flexibilidad: permite agregar futuros módulos fácilmente
+// Ejemplo: include 'integration', 'notifications', 'scalability'

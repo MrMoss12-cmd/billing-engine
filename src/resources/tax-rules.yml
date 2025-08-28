@@ -1,0 +1,54 @@
+# resources/tax-rules.yml
+
+tax-rules:
+  version: 1.0
+  last-updated: 2025-08-16
+  description: "Reglas fiscales configurables por tenant y región para el microservicio de facturación."
+
+  tenants:
+    tenant_001:
+      country: CO
+      currency: COP
+      rules:
+        - type: IVA
+          rate: 0.19
+          description: "IVA general Colombia"
+          applies-to: all
+        - type: RETEICA
+          rate: 0.01
+          description: "Retención ICA municipal"
+          applies-to: services
+        - type: EXEMPT
+          description: "Productos exentos de IVA"
+          applies-to: products
+          conditions:
+            categories:
+              - 'educativo'
+              - 'salud'
+    tenant_002:
+      country: US
+      currency: USD
+      rules:
+        - type: SALES_TAX
+          rate: 0.07
+          description: "Sales Tax general USA"
+          applies-to: all
+        - type: FEDERAL_TAX
+          rate: 0.05
+          description: "Federal Tax"
+          applies-to: services
+
+  global-rules:
+    rounding-policy: "HALF_UP"
+    max-tax-rate: 0.30
+    min-tax-rate: 0.0
+    compliance:
+      - country: CO
+        regulation: "DIAN Resolución 00001/2020"
+      - country: US
+        regulation: "IRS Publication 531"
+
+  audit:
+    enabled: true
+    log-calculation: true
+    log-level: INFO
