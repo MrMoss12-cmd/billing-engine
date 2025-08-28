@@ -102,7 +102,7 @@ flowchart TD
     C --> L[ Kafka / RabbitMQ]
     L --> M[( Auditoría / Monitoreo)]
 
-    B --> N[ Seguridad (JWT / mTLS)]
+    B --> N[ Seguridad JWT / mTLS]
 
 ```
 
