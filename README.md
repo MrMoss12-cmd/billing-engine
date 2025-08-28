@@ -83,6 +83,31 @@ Aquí te los resumo como **capas de negocio**:
 
 ---
 
+```mermaid
+flowchart TD
+    A[🏢 Tenants / Clientes] -->|REST/mTLS| B[🌐 BillingController]
+
+    B --> C[⚙️ BillingEngine]
+    C --> D[🧮 TaxRuleEngine]
+    C --> E[📄 InvoiceGenerator]
+    C --> F[✍️ InvoiceSigner]
+
+    C --> G[💳 PaymentProcessor]
+    G -->|Stripe/PayPal/Banco| H[🏦 Pasarelas de pago]
+
+    C --> I[📢 EmitNotificationEvent]
+    I --> J[📧 EmailProvider]
+    J --> K[(🗄️ InvoiceEmailLogRepository)]
+
+    C --> L[📦 Kafka / RabbitMQ]
+    L --> M[(📊 Auditoría / Monitoreo)]
+
+    B --> N[🔐 Seguridad (JWT / mTLS)]
+
+```
+
+---
+
 ## ✅ En pocas palabras
 El `billing-engine` es el **cerebro de facturación**. Automatiza la creación de facturas, aplica impuestos, procesa pagos y emite notificaciones, todo de forma **segura, auditable y escalable**.
 
